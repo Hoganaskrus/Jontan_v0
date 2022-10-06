@@ -40,6 +40,12 @@ class GameWindow():
             pygame.draw.polygon(self.screen, color, hex.polygon_corners())
             pygame.draw.polygon(self.screen, color.correct_gamma(0.5), hex.polygon_corners(-5))
             pixelCenter = _hex_to_pixel(hex.q, hex.r, hex.size, hex.center_point)
+
+            for i in range(6):
+                rectpoint_0 = _hex_to_node(hex.q, hex.r,i,self.hex_size,self.center_point)
+                rectpoint_1 = _hex_to_node(hex.q, hex.r,i+1,self.hex_size,self.center_point)
+                pygame.draw.line(self.screen, pygame.Color('black'), rectpoint_0, rectpoint_1, 3)
+
             if(land['resource'].name != 'Desert'): #skip desert text/number
                 resourceText = pygame.font.SysFont('arialblack', 15).render(str(land['resource'].name) + " (" +str(number) + ")", False, (0,0,0))
                 self.screen.blit(resourceText, (pixelCenter[0] + TEXT_OFFSET[land['resource'].name][0], pixelCenter[1] + TEXT_OFFSET[land['resource'].name][1])) #add text to hex
