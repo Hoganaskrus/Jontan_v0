@@ -1,4 +1,4 @@
-from utils import Colony, Graph, Harbour, Road
+from utils import Colony, Harbour, Road, _build_graph, _build_lands
 from constants import VERTICES, START_VERTICE_ROW, END_VERTICE_ROW, PIVOT_ROW, NEIGHBOURS, COLONY, ROADS, HARBOUR_VERTICES, HARBOUR, HEX_COORD, Resource
 import numpy as np
 
@@ -6,8 +6,8 @@ class Board():
     def __init__(self, seed):
         self._random = np.random.RandomState(seed)
 
-        self.graph = Graph().graph
-        self.lands = Graph().lands
+        self.graph = _build_graph()
+        self.lands = _build_lands(self.graph)
 
         self.player_boards = {}
         self.player_info = {}

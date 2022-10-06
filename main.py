@@ -1,9 +1,9 @@
-from utils import Graph
 from board import Board
 from draw import GameWindow
 import pygame
 from draw import _pixel_to_hex, _hex_to_node
-
+from game import Game
+from person import Player
 
 if __name__ == '__main__':
     _vertices_rows = [
@@ -24,6 +24,10 @@ if __name__ == '__main__':
 
     # board = Graph()
     board = Board(1337)
+    player_list = [Player(True, 'test1', (0, 0, 0)), Player(True, 'test2', (255, 255, 255))]
+    catan = Game(board,player_list)
+
+    catan.apply(0,['road', 0, 3])
 
     gw = GameWindow(board,[1000, 800])
     gw.displayInitialBoard()
