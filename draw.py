@@ -2,7 +2,7 @@ import pygame
 import math
 
 from constants import HEX_ORIENTATION, HEX_COORD, TEXT_OFFSET, VERTICES, HARBOUR_VERTICES, HARBOUR_HEX_AND_DIRECTION
-from testplot import Hex
+from testplot import Hex, polygon_corners
 from board import Board
 
 # From https://www.redblobgames.com/grids/hexagons/
@@ -38,7 +38,6 @@ class GameWindow():
             number = land['number']
         
             pygame.draw.polygon(self.screen, color, hex.polygon_corners())
-            pygame.draw.polygon(self.screen, color.correct_gamma(0.5), hex.polygon_corners(-5))
             pixelCenter = _hex_to_pixel(hex.q, hex.r, hex.size, hex.center_point)
 
             for i in range(6):
@@ -84,14 +83,13 @@ class HexTile():
         self.size = hex_size
         self.center_point = center_point
         self.land = land
+        self.corners = self.polygon_corners()
 
-
-    def polygon_corners(self, size_offset = 0):
+    def polygon_corners(self):
         corners = []
         center = _hex_to_pixel(self.q, self.r, self.size, self.center_point)
-        hex_size = (self.size[0] + size_offset, self.size[1] + size_offset)
         for i in range(0, 6):
-            offset = _hex_corner_offset(hex_size, i)
+            offset = _hex_corner_offset(self.size, i)
             corners.append((round(center[0] + offset[0],2), round(center[1] + offset[1],2)))
         return corners
 
