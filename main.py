@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-=======
-from time import time_ns
 from utils import Graph, dot, norm, squared_dist, sub, dist
->>>>>>> 9680b117804176092be961e210bc7298a03a7438
 from board import Board
 from draw import GameWindow
 from constants import DEBUG
