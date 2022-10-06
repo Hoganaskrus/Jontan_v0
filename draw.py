@@ -19,8 +19,10 @@ class GameWindow():
 
         hex_list = []
 
-        for coord in HEX_COORD:
-            hex_list.append(HexTile(coord[0],coord[1],hex_size, center_point))
+        for i, coord in enumerate(HEX_COORD):
+            hex = HexTile(coord[0],coord[1],hex_size, center_point, gameboard.lands[i])
+            hex_list.append(hex)
+            gameboard.lands[i]['hextile'] = hex
 
         self.hex_list = hex_list
 
@@ -69,11 +71,12 @@ class HexTile():
         r = Rows
         s = Square
     """
-    def __init__(self, q, r, hex_size, center_point):
+    def __init__(self, q, r, hex_size, center_point, land):
         self.q = q
         self.r = r
         self.size = hex_size
         self.center_point = center_point
+        self.land = land
 
 
     def polygon_corners(self):
@@ -103,6 +106,12 @@ def _hex_to_node(q,r,direction, hex_size, center_point):
 #     row = [i for i,v in enumerate(VERTICES) if node in v]
 #     col = [i for i,v in VERTICES[row] if node==v]
 
+def _pixel_to_hex(x,y, hex_size, center_pint):
+    h_x = (x - center_pint[0] )/ hex_size[0]
+    h_y = (y - center_pint[1] ) / hex_size[1]
+    q = HEX_ORIENTATION[4] * h_x + HEX_ORIENTATION[5] * h_y
+    r = HEX_ORIENTATION[6] * h_x  + HEX_ORIENTATION[7] * h_y
+    return HexTile(q, r, hex_size, center_pint)
 
 
 def test_layout(board):
