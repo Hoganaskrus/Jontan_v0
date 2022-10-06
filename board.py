@@ -1,11 +1,10 @@
-from utils import Colony, Graph, Harbour, Road
-from constants import VERTICES, START_VERTICE_ROW, END_VERTICE_ROW, PIVOT_ROW, NEIGHBOURS, COLONY, ROADS, HARBOUR_VERTICES, HARBOUR, HEX_COORD, Resource
+from graph import Colony, Graph, Harbour, Road
+from constants import VERTICES, START_VERTICE_ROW, END_VERTICE_ROW, PIVOT_ROW, NEIGHBOURS, COLONY, ROADS, HARBOUR_VERTICES, HARBOUR, HEX_COORD, Resource, DEBUG
 import numpy as np
 
 class Board():
     def __init__(self, seed):
         self._random = np.random.RandomState(seed)
-
         self.graph = Graph().graph
         self.lands = Graph().lands
 
