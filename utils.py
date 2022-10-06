@@ -1,23 +1,29 @@
 import enum
+from math import sqrt, pow
 from constants import VERTICES, START_VERTICE_ROW, END_VERTICE_ROW, PIVOT_ROW, NEIGHBOURS, COLONY, ROADS, HARBOUR, Resource
+from collections import namedtuple
+from graph import Graph
 
+def inner_product(*args):
+    prod = [1]*len(args[0])
+    for p in args:
+        for i in (range(len(prod))):
+            prod[i] *= p[i]
+    return prod
 
-class Colony(enum.Enum):
-    Uncolonised = 0
-    Settlement = 1
-    City = 2
+def norm(p):
+    return dist(p, (0,0))
 
+def sub(p1, p2):
+    return (p1[0] - p2[0], p1[1] - p2[1])
 
-class Harbour(enum.Enum):
-    HarbourBrick = Resource.Brick.value
-    HarbourLumber = Resource.Lumber.value
-    HarbourWool = Resource.Wool.value
-    HarbourGrain = Resource.Grain.value
-    HarbourOre = Resource.Ore.value
-    HarbourGeneric = 5
-    NoHarbour = 6
+def squared_dist(p1, p2):
+    return (p1[0] - p2[0])**2 + (p1[1] - p2[1])**2
 
+def dist(p1,p2):
+    return sqrt(squared_dist(p1,p2))
 
+<<<<<<< HEAD
 class Road(enum.Enum):
     Paved = 1
     Unpaved = 2
@@ -109,3 +115,8 @@ def _build_lands(graph):
                     lands[new_land_idx + new_lands_counter]['robber'] = False
             new_lands_counter += len(row)
 
+=======
+def dot(*args):
+    prod = inner_product(*args)
+    return dist(prod, (0,0))
+>>>>>>> 9680b117804176092be961e210bc7298a03a7438

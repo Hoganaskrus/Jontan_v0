@@ -1,13 +1,23 @@
+<<<<<<< HEAD
 from utils import Colony, Harbour, Road, _build_graph, _build_lands
 from constants import VERTICES, START_VERTICE_ROW, END_VERTICE_ROW, PIVOT_ROW, NEIGHBOURS, COLONY, ROADS, HARBOUR_VERTICES, HARBOUR, HEX_COORD, Resource
+=======
+from graph import Colony, Graph, Harbour, Road
+from constants import VERTICES, START_VERTICE_ROW, END_VERTICE_ROW, PIVOT_ROW, NEIGHBOURS, COLONY, ROADS, HARBOUR_VERTICES, HARBOUR, HEX_COORD, Resource, DEBUG
+>>>>>>> 9680b117804176092be961e210bc7298a03a7438
 import numpy as np
 
 class Board():
     def __init__(self, seed):
         self._random = np.random.RandomState(seed)
+<<<<<<< HEAD
 
         self.graph = _build_graph()
         self.lands = _build_lands(self.graph)
+=======
+        self.graph = Graph().graph
+        self.lands = Graph().lands
+>>>>>>> 9680b117804176092be961e210bc7298a03a7438
 
         self.player_boards = {}
         self.player_info = {}

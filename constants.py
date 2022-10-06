@@ -1,5 +1,12 @@
+from distutils.debug import DEBUG
 import enum
 import math
+
+DEBUG = True
+
+HEX_SIZE = (75,75)
+BOARD_CENTER_POINT = (500,400)
+
 VERTICES = [
         [i for i in range(0, 3)],
         [i for i in range(3, 7)],

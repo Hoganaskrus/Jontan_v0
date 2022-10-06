@@ -1,18 +1,16 @@
 import pygame
 import math
 
-from constants import HEX_ORIENTATION, HEX_COORD, TEXT_OFFSET, VERTICES, HARBOUR_VERTICES, HARBOUR_HEX_AND_DIRECTION
+from constants import HEX_ORIENTATION, HEX_COORD, TEXT_OFFSET, VERTICES, HARBOUR_VERTICES, HARBOUR_HEX_AND_DIRECTION, HEX_SIZE, BOARD_CENTER_POINT
 from testplot import Hex, polygon_corners
 from board import Board
 
 # From https://www.redblobgames.com/grids/hexagons/
 
 class GameWindow():
-    def __init__(self, gameboard, size, center_point=[500,400], hex_size=[75,75]):
+    def __init__(self, gameboard, size):
         self.gameboard = gameboard
         self.size = size
-        self.center_point = center_point
-        self.hex_size = hex_size
         
         self.screen = pygame.display.set_mode([size[0], size[1]])
         pygame.display.set_caption('Settlers of Catan')
@@ -20,9 +18,10 @@ class GameWindow():
         hex_list = []
 
         for i, coord in enumerate(HEX_COORD):
-            hex = HexTile(coord[0],coord[1],hex_size, center_point, gameboard.lands[i])
+            hex = HexTile(coord[0],coord[1], gameboard.lands[i])
             hex_list.append(hex)
             gameboard.lands[i]['hextile'] = hex
+            gameboard.lands[tuple(coord)] = gameboard.lands[i]
 
         self.hex_list = hex_list
 
@@ -37,12 +36,12 @@ class GameWindow():
             color = HEX_COLOR[land['resource'].name]
             number = land['number']
         
-            pygame.draw.polygon(self.screen, color, hex.polygon_corners())
-            pixelCenter = _hex_to_pixel(hex.q, hex.r, hex.size, hex.center_point)
+            pygame.draw.polygon(self.screen, color, hex.corners)
+            pixelCenter = _hex_to_pixel(hex.q, hex.r)
 
             for i in range(6):
-                rectpoint_0 = _hex_to_node(hex.q, hex.r,i,self.hex_size,self.center_point)
-                rectpoint_1 = _hex_to_node(hex.q, hex.r,i+1,self.hex_size,self.center_point)
+                rectpoint_0 = _hex_to_node(hex.q, hex.r,i,)
+                rectpoint_1 = _hex_to_node(hex.q, hex.r,i+1)
                 pygame.draw.line(self.screen, pygame.Color('black'), rectpoint_0, rectpoint_1, 3)
 
             if(land['resource'].name != 'Desert'): #skip desert text/number
@@ -53,17 +52,17 @@ class GameWindow():
         #Display the Ports - update images/formatting later
         for i,vertecies in enumerate(HARBOUR_HEX_AND_DIRECTION): 
             harb = self.gameboard.graph[HARBOUR_VERTICES[i][0]]['harbour']
-            pixelCenter = _hex_to_node(vertecies[0],vertecies[1],vertecies[2],hex.size,hex.center_point)
+            pixelCenter = _hex_to_node(vertecies[0],vertecies[1],vertecies[2])
             portText = pygame.font.SysFont('cambria', 12).render(harb.name[7:9], False, (0,0,0))
             self.screen.blit(portText, (pixelCenter[0] , pixelCenter[1]))
-            pixelCenter = _hex_to_node(vertecies[0],vertecies[1],vertecies[3],hex.size,hex.center_point)
+            pixelCenter = _hex_to_node(vertecies[0],vertecies[1],vertecies[3])
             self.screen.blit(portText, (pixelCenter[0] , pixelCenter[1]))
             
         for i in range(1,3,1):
-            rectpoint = _hex_to_node(i,-1+i,1+i,self.hex_size,self.center_point)
+            rectpoint = _hex_to_node(i,-1+i,1+i)
             pygame.draw.rect(self.screen, pygame.Color('black'), (rectpoint[0]-8,rectpoint[1]-8,16, 16))
 
-            rectpoint2 = _hex_to_node(i,-1+i,2+i,self.hex_size,self.center_point)
+            rectpoint2 = _hex_to_node(i,-1+i,2+i)
             pygame.draw.line(self.screen, pygame.Color('black'), rectpoint, rectpoint2, 5)
 
         pygame.display.update()
@@ -77,47 +76,45 @@ class HexTile():
         r = Rows
         s = Square
     """
-    def __init__(self, q, r, hex_size, center_point, land):
+    def __init__(self, q, r, land):
         self.q = q
         self.r = r
-        self.size = hex_size
-        self.center_point = center_point
         self.land = land
-        self.corners = self.polygon_corners()
+        self.corners = self._polygon_corners()
 
-    def polygon_corners(self):
+    def _polygon_corners(self):
         corners = []
-        center = _hex_to_pixel(self.q, self.r, self.size, self.center_point)
+        center = _hex_to_pixel(self.q, self.r)
         for i in range(0, 6):
-            offset = _hex_corner_offset(self.size, i)
+            offset = _hex_corner_offset(i)
             corners.append((round(center[0] + offset[0],2), round(center[1] + offset[1],2)))
         return corners
 
-def _hex_to_pixel(q,r, hex_size, center_point):
-    x = (HEX_ORIENTATION[0] * q + HEX_ORIENTATION[1] * r) * hex_size[0]
-    y = (HEX_ORIENTATION[2] * q + HEX_ORIENTATION[3] * r) * hex_size[1]
-    return x + center_point[0], y + center_point[1]
+def _hex_to_pixel(q,r):
+    x = (HEX_ORIENTATION[0] * q + HEX_ORIENTATION[1] * r) * HEX_SIZE[0]
+    y = (HEX_ORIENTATION[2] * q + HEX_ORIENTATION[3] * r) * HEX_SIZE[1]
+    return x + BOARD_CENTER_POINT[0], y + BOARD_CENTER_POINT[1]
 
 
-def _hex_corner_offset(hex_size, corner):
+def _hex_corner_offset(corner):
     angle = 2.0 * math.pi * (HEX_ORIENTATION[-1] - corner) / 6.0
-    return hex_size[0] * math.cos(angle), hex_size[1] * math.sin(angle)
+    return HEX_SIZE[0] * math.cos(angle), HEX_SIZE[1] * math.sin(angle)
 
-def _hex_to_node(q,r,direction, hex_size, center_point):
-    x,y = _hex_to_pixel(q,r,hex_size,center_point)
-    offset_x, offset_y = _hex_corner_offset(hex_size, direction)
+def _hex_to_node(q,r,direction):
+    x,y = _hex_to_pixel(q,r)
+    offset_x, offset_y = _hex_corner_offset(direction)
     return x+offset_x, y + offset_y
 
 # def node_to_hex(node):
 #     row = [i for i,v in enumerate(VERTICES) if node in v]
 #     col = [i for i,v in VERTICES[row] if node==v]
 
-def _pixel_to_hex(x,y, hex_size, center_pint):
-    h_x = (x - center_pint[0] )/ hex_size[0]
-    h_y = (y - center_pint[1] ) / hex_size[1]
+def _pixel_to_hex(x,y):
+    h_x = (x - BOARD_CENTER_POINT[0] )/ HEX_SIZE[0]
+    h_y = (y - BOARD_CENTER_POINT[1] ) / HEX_SIZE[1]
     q = HEX_ORIENTATION[4] * h_x + HEX_ORIENTATION[5] * h_y
     r = HEX_ORIENTATION[6] * h_x  + HEX_ORIENTATION[7] * h_y
-    return HexTile(q, r, hex_size, center_pint)
+    return int(q), int(r)
 
 
 def test_layout(board):
