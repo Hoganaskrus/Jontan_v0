@@ -49,8 +49,7 @@ if __name__ == '__main__':
             q,r = _pixel_to_hex(*mouse_pos)
             land = board.lands[(q,r)]
             tile = land['hextile']
-            last_curr_closest = (float('inf'), None, None)
-            curr_closest = (float('inf'), None, None)
+
             corners_with_dist = []
             for c in tile.corners:
                 d = dist(mouse_pos, c)
