@@ -1,6 +1,6 @@
 
 from constants import PRICES
-from utils import Road
+from graph import Road
 
 
 

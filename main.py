@@ -51,16 +51,16 @@ if __name__ == '__main__':
             tile = land['hextile']
             last_curr_closest = (float('inf'), None, None)
             curr_closest = (float('inf'), None, None)
+            corners_with_dist = []
             for c in tile.corners:
                 d = dist(mouse_pos, c)
-                if d < curr_closest[0]:
-                    last_curr_closest = (curr_closest[0], curr_closest[1], curr_closest[2])
-                    curr_closest = (d, c, land)
+                corners_with_dist.append((d, c))
+            
+            corners_with_dist = sorted(corners_with_dist, key=lambda tup: tup[0])
+            curr_closest = corners_with_dist[0]
+            last_curr_closest = corners_with_dist[1]
 
-            v1 = sub(last_curr_closest[1], mouse_pos)
-            v2 = sub(curr_closest[1], mouse_pos)
-            dot_prod = dot(v1,v2)/(norm(v1)* norm(v2))
-            if dot_prod < 0.5:
+            if curr_closest[0] < 20:
                 pygame.draw.rect(gw.screen, pygame.Color('green'), (curr_closest[1][0]-8,curr_closest[1][1]-8,16, 16))
             else:
                 pygame.draw.line(gw.screen, pygame.Color('green'), curr_closest[1], last_curr_closest[1], 3)
