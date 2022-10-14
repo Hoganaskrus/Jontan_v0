@@ -78,16 +78,15 @@ if __name__ == '__main__':
             if event.type == pygame.MOUSEBUTTONUP:
                 if curr_closest[0] < 20:
                     node_key = curr_closest[2]
-                    print(node_key)
+                    board.graph[node_key]['owner'] = 'Me'
                 else:
                     road_key = str(curr_closest[2]).zfill(2) + str(last_curr_closest[2]).zfill(2)
-                    print(road_key)
+                    board.roads[road_key]['owner'] = 'Me'
 
 
 
         pygame.display.update()
-        new_tick = pygame.time.get_ticks()
-        frame_time = new_tick - last_tick
+        frame_time = pygame.time.get_ticks() - last_tick
         pygame.time.delay(max(0, expected_frame_time_ms - frame_time))
         last_tick = pygame.time.get_ticks()
     p = 2

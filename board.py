@@ -5,8 +5,10 @@ import numpy as np
 class Board():
     def __init__(self, seed):
         self._random = np.random.RandomState(seed)
-        self.graph = Graph().graph
-        self.lands = Graph().lands
+        self.graph_object = Graph()
+        self.graph = self.graph_object.graph
+        self.lands = self.graph_object.lands
+        self.roads = self.graph_object.roads
 
         self.player_boards = {}
         self.player_info = {}
