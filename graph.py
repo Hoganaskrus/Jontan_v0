@@ -15,24 +15,15 @@ class Harbour(enum.Enum):
     HarbourGeneric = 5
     NoHarbour = 6
 
-class RoadEnum(enum.Enum):
+class Road(enum.Enum):
     Paved = 1
     Unpaved = 2
-
-class Road():
-    def __init__(self, node, connection) -> None:
-        self.type = RoadEnum.Unpaved
-        self.node = node
-        self.connection = connection
-        
 
 class Graph():
     def __init__(self):
         self.roads = {}
         self.graph = self._build_graph()
         self.lands = self._build_lands()
-
-
 
     def _build_graph(self):
         graph = {}
@@ -55,7 +46,7 @@ class Graph():
                             neighbours.extend([VERTICES[i-1][j], VERTICES[i-1][j+1]])#Connect upwards, since bottom rows
 
                     neighbours.sort()
-                    graph[node] = {NEIGHBOURS : neighbours, COLONY: Colony.Uncolonised, HARBOUR: Harbour.NoHarbour}
+                    graph[node] = {NEIGHBOURS : neighbours, COLONY: Colony.Uncolonised, HARBOUR: Harbour.NoHarbour, 'owner': None}
 
             else: #When connection above is a line
                 for j,node in enumerate(row):
@@ -73,14 +64,14 @@ class Graph():
                             neighbours = [VERTICES[i+1][j-1], VERTICES[i+1][j]] #Connect downwards
                         neighbours.append(VERTICES[i-1][j])
                     neighbours.sort()
-                    graph[node] = {NEIGHBOURS : neighbours, COLONY: Colony.Uncolonised, HARBOUR: Harbour.NoHarbour}
+                    graph[node] = {NEIGHBOURS : neighbours, COLONY: Colony.Uncolonised, HARBOUR: Harbour.NoHarbour, 'owner': None}
 
             for node in row:
                 node_roads = {}
                 for connection in graph[node][NEIGHBOURS]:
                     key = str(node).zfill(2) + str(connection).zfill(2)
                     rew_key = str(connection).zfill(2) + str(node).zfill(2)
-                    new_road = self.roads.get(rew_key, Road(node, connection))
+                    new_road = self.roads.get(rew_key, {'type': Road.Unpaved, 'node': node, 'connection': connection, 'owner': None})
 
                     node_roads[key] = new_road
                     self.roads[key] = new_road
@@ -88,10 +79,6 @@ class Graph():
                 graph[node][ROADS] = node_roads
 
         return graph
-
-     
-    
-
 
     def _build_lands(self):
         lands = {}
@@ -123,4 +110,8 @@ class Graph():
                     if is_a_new_land:
                         lands[new_land_idx + new_lands_counter]['nodes'] = neighbours
                         lands[new_land_idx + new_lands_counter]['robber'] = False
+                        for node in neighbours:
+                            if new_land_idx + new_lands_counter not in node['lands']:
+                                node['lands'] = {}
+                            node['lands'][new_land_idx + new_lands_counter] = lands[new_land_idx + new_lands_counter]
                 new_lands_counter += len(row)
