@@ -1,7 +1,7 @@
 
-from tkinter import W
+from argparse import Action
 from constants import PRICES, Actions
-from graph import Road
+from graph import Road, Colony
 
 
 
@@ -34,12 +34,21 @@ class Game():
                     self.remove_resources(player, PRICES[action])
                     return True
             return False
-            pass
+        elif action == Actions.BuildHouse:
+            node1 = args
+            node = self.gameboard.graph[node1]
+            if node['owner'] is not None:
+                node['colony'] = Colony.Settlement
+                node['owner'] = player
+                self.remove_resources(player, PRICES[action])
+                return True
+            return False
 
     
     def remove_resources(self, player, resources):
         for r in resources:
             self.player_list[player].resources[r.name] -= r.value
+        
 
 
 def _enough_resources(resources, action):
