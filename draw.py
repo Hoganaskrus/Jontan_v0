@@ -36,7 +36,7 @@ class GameWindow():
             color = HEX_COLOR[land['resource'].name]
             number = land['number']
         
-            pygame.draw.polygon(self.screen, color, hex.corners)
+            pygame.draw.polygon(self.screen, color, list(hex.corners.values()))
             pixelCenter = _hex_to_pixel(hex.q, hex.r)
 
             for i in range(6):
@@ -65,7 +65,9 @@ class GameWindow():
             rectpoint2 = _hex_to_node(i,-1+i,2+i)
             pygame.draw.line(self.screen, pygame.Color('black'), rectpoint, rectpoint2, 5)
 
-        pygame.display.update()
+    def draw_text(self, text, x, y):
+        resourceText = pygame.font.SysFont('arialblack', 15).render(text, False, (0,0,0))
+        self.screen.blit(resourceText, (x, y)) #add text to hex
 
 #Layout has the orientation, size and origin
 
@@ -81,13 +83,14 @@ class HexTile():
         self.r = r
         self.land = land
         self.center = _hex_to_pixel(q, r)
-        self.corners = self._polygon_corners()
+        self.corners = self._polygon_corners(land['nodes'])
 
-    def _polygon_corners(self):
-        corners = []
+    def _polygon_corners(self, nodes):
+        corners = {}
+        graph_corner_map = [5,4,0,1,2,3]
         for i in range(0, 6):
             offset = _hex_corner_offset(i)
-            corners.append((round(self.center[0] + offset[0],2), round(self.center[1] + offset[1],2)))
+            corners[nodes[graph_corner_map[i]]] = (round(self.center[0] + offset[0],2), round(self.center[1] + offset[1],2))
         return corners
 
 def _hex_to_pixel(q,r):
@@ -147,5 +150,4 @@ def test_layout(board):
 
 if __name__ == '__main__':
     board = Board(1337)
-
     test_layout(board)
