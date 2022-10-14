@@ -47,29 +47,39 @@ class Resource(enum.Enum):
     Ore = 4
     Desert = 5
 
+
+class Actions(enum.Enum):
+    BuildRoad = 0
+    BuildHouse = 1
+    BuildTown = 2
+    BuyDevCard = 3
+    UseDevCard = 4
+    Trade = 5
+
+
 PRICES = {
-    'road' : {
+    Actions.BuildRoad : {
         Resource.Brick: 1,
         Resource.Lumber: 1,
         Resource.Wool: 0,
         Resource.Grain: 0,
         Resource.Ore: 0,
     },
-    'settlement' : {
+    Actions.BuildHouse : {
         Resource.Brick: 1,
         Resource.Lumber: 1,
         Resource.Wool: 1,
         Resource.Grain: 1,
         Resource.Ore: 0
     },
-    'city' : {
+    Actions.BuildTown : {
         Resource.Brick: 0,
         Resource.Lumber: 0,
         Resource.Wool: 0,
         Resource.Grain: 2,
         Resource.Ore: 3
     },
-    'development_card' : {
+    Actions.BuyDevCard : {
         Resource.Brick: 0,
         Resource.Lumber: 0,
         Resource.Wool: 1,

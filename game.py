@@ -1,5 +1,6 @@
 
-from constants import PRICES
+from tkinter import W
+from constants import PRICES, Actions
 from graph import Road
 
 
@@ -12,26 +13,27 @@ class Game():
 
         self.gamestate = []
 
-    def apply(self, player, action):
-        if self.is_allowed(player, action):
+    def apply(self, player, action, *args):
+        if self.is_allowed(player, action, *args):
             pass
 
 
 
 
-    def is_allowed(self, player, action):
-        if _enough_resources(self.player_list[player].resources, action[0]):
+    def is_allowed(self, player, action, *args):
+        if _enough_resources(self.player_list[player].resources, action):
             return False
 
-        if action[0] == 'road':
-            road_idx = str(action[1])+str(action[2])
-            for _, nodes in self.gameboard.graph.items():
-                if road_idx in nodes['roads']:
-                    if nodes['roads'] == Road.Unpaved:
-                        nodes['roads'] = [player, Road.Paved]
-                        self.remove_resources(player, PRICES[action[0]])
-                        return True
-
+        if action == Actions.BuildRoad:
+            node1, node2 = args
+            road_idx = str(node1).zfill(2)+str(node2).zfill(2)
+            node = self.gameboard.graph[node1]
+            if road_idx in node['roads']:
+                if not node['roads'][road_idx]['owner']:
+                    node['roads'][road_idx]['owner'] = player
+                    self.remove_resources(player, PRICES[action])
+                    return True
+            return False
             pass
 
     

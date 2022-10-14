@@ -1,3 +1,4 @@
+from constants import Actions
 from utils import Graph, dot, norm, squared_dist, sub, dist
 from board import Board
 from draw import GameWindow
@@ -30,7 +31,7 @@ if __name__ == '__main__':
     player_list = [Player(True, 'test1', (0, 0, 0)), Player(True, 'test2', (255, 255, 255))]
     catan = Game(board,player_list)
 
-    catan.apply(0,['road', 0, 3])
+    catan.apply(0, Actions.BuildRoad, 0, 3)
 
     gw = GameWindow(board,[1000, 800])
 
