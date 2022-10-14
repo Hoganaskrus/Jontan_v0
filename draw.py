@@ -9,9 +9,10 @@ from board import Board
 # From https://www.redblobgames.com/grids/hexagons/
 
 class GameWindow():
-    def __init__(self, gameboard, size):
+    def __init__(self, gameboard, player_list, size):
         self.gameboard = gameboard
         self.size = size
+        self.player_list = player_list
         
         self.screen = pygame.display.set_mode([size[0], size[1]])
         pygame.display.set_caption('Settlers of Catan')
@@ -23,8 +24,23 @@ class GameWindow():
             hex_list.append(hex)
             gameboard.lands[i]['hextile'] = hex
             gameboard.lands[tuple(coord)] = gameboard.lands[i]
+            for node_idx in gameboard.lands[i]['nodes']:
+                gameboard.graph[node_idx]['screen_pos'] = hex.corners[node_idx]
 
         self.hex_list = hex_list
+
+    def draw_game_info(self):
+        for i, node in self.gameboard.graph.items():
+            if node['owner'] is not None:
+                color = self.player_list[node['owner']].color
+                pygame.draw.rect(self.screen, pygame.Color(color), node['screen_pos'])
+            for road_idx, road in node['roads'].items():
+                if road['owner'] is not None:
+                    n2 = int(road_idx[2:])
+                    n2 = self.gameboard.graph[n2]
+                    color = self.player_list[road['owner']].color
+                    pygame.draw.line(self.screen, pygame.Color(color), node['screen_pos'], n2['screen_pos'], 3)
+
 
 
     def displayInitialBoard(self):

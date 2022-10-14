@@ -1,5 +1,4 @@
 
-from tkinter import W
 from constants import PRICES, Actions
 from graph import Road
 
@@ -15,10 +14,8 @@ class Game():
 
     def apply(self, player, action, *args):
         if self.is_allowed(player, action, *args):
+            print('allowed')
             pass
-
-
-
 
     def is_allowed(self, player, action, *args):
         if _enough_resources(self.player_list[player].resources, action):
