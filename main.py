@@ -67,6 +67,7 @@ if __name__ == '__main__':
             if DEBUG:
                 pygame.draw.line(gw.screen, pygame.Color('green'), mouse_pos, last_curr_closest[1], 1)
                 pygame.draw.line(gw.screen, pygame.Color('green'), curr_closest[1], mouse_pos, 1)
+                pygame.draw.line(gw.screen, pygame.Color('red'), mouse_pos, tile.center, 1)
         except Exception:
             pass
 
