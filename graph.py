@@ -46,7 +46,7 @@ class Graph():
                             neighbours.extend([VERTICES[i-1][j], VERTICES[i-1][j+1]])#Connect upwards, since bottom rows
 
                     neighbours.sort()
-                    graph[node] = {NEIGHBOURS : neighbours, COLONY: Colony.Uncolonised, HARBOUR: Harbour.NoHarbour, 'owner': None}
+                    graph[node] = {NEIGHBOURS : neighbours, COLONY: Colony.Uncolonised, HARBOUR: Harbour.NoHarbour, 'owner': None, 'lands':{}}
 
             else: #When connection above is a line
                 for j,node in enumerate(row):
@@ -64,7 +64,7 @@ class Graph():
                             neighbours = [VERTICES[i+1][j-1], VERTICES[i+1][j]] #Connect downwards
                         neighbours.append(VERTICES[i-1][j])
                     neighbours.sort()
-                    graph[node] = {NEIGHBOURS : neighbours, COLONY: Colony.Uncolonised, HARBOUR: Harbour.NoHarbour, 'owner': None}
+                    graph[node] = {NEIGHBOURS : neighbours, COLONY: Colony.Uncolonised, HARBOUR: Harbour.NoHarbour, 'owner': None, 'lands':{}}
 
             for node in row:
                 node_roads = {}
@@ -111,7 +111,5 @@ class Graph():
                         lands[new_land_idx + new_lands_counter]['nodes'] = neighbours
                         lands[new_land_idx + new_lands_counter]['robber'] = False
                         for node in neighbours:
-                            if new_land_idx + new_lands_counter not in node['lands']:
-                                node['lands'] = {}
-                            node['lands'][new_land_idx + new_lands_counter] = lands[new_land_idx + new_lands_counter]
+                            self.graph[node]['lands'][new_land_idx + new_lands_counter] = lands[new_land_idx + new_lands_counter]
                 new_lands_counter += len(row)
