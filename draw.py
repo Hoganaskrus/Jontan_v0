@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import pygame
 import math
 
@@ -86,7 +87,7 @@ class HexTile():
         self.corners = self._polygon_corners(land['nodes'])
 
     def _polygon_corners(self, nodes):
-        corners = {}
+        corners = OrderedDict()
         graph_corner_map = [5,4,0,1,2,3]
         for i in range(0, 6):
             offset = _hex_corner_offset(i)

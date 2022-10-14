@@ -76,9 +76,11 @@ if __name__ == '__main__':
         for event in ev:
             if event.type == pygame.MOUSEBUTTONUP:
                 if curr_closest[0] < 20:
-                    road_key = str(curr_closest[2]).zfill(2) + str(last_curr_closest[2]).zfill(2)
-                else:
                     node_key = curr_closest[2]
+                    print(node_key)
+                else:
+                    road_key = str(curr_closest[2]).zfill(2) + str(last_curr_closest[2]).zfill(2)
+                    print(road_key)
 
 
 
