@@ -80,14 +80,14 @@ class HexTile():
         self.q = q
         self.r = r
         self.land = land
+        self.center = _hex_to_pixel(q, r)
         self.corners = self._polygon_corners()
 
     def _polygon_corners(self):
         corners = []
-        center = _hex_to_pixel(self.q, self.r)
         for i in range(0, 6):
             offset = _hex_corner_offset(i)
-            corners.append((round(center[0] + offset[0],2), round(center[1] + offset[1],2)))
+            corners.append((round(self.center[0] + offset[0],2), round(self.center[1] + offset[1],2)))
         return corners
 
 def _hex_to_pixel(q,r):
