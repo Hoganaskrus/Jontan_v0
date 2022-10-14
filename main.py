@@ -75,7 +75,7 @@ if __name__ == '__main__':
 
         for event in ev:
             if event.type == pygame.MOUSEBUTTONUP:
-                test = _pixel_to_hex(mouse_pos[0], mouse_pos[1], [75,75], [500,400])
+                test = _pixel_to_hex(mouse_pos[0], mouse_pos[1])
                 pixelCenter = _hex_to_node(test.q, test.r, 1, test.size, test.center_point)
                 # pixelCenter = _hex_to_pixel(test.q, test.r, test.size, test.center_point)
                 print(pixelCenter)

@@ -15,14 +15,23 @@ class Harbour(enum.Enum):
     HarbourGeneric = 5
     NoHarbour = 6
 
-class Road(enum.Enum):
+class RoadEnum(enum.Enum):
     Paved = 1
     Unpaved = 2
 
+class Road():
+    def __init__(self, node, connection) -> None:
+        self.type = RoadEnum.Unpaved
+        self.node = node
+        self.connection = connection
+        
+
 class Graph():
     def __init__(self):
+        self.roads = {}
         self.graph = self._build_graph()
         self.lands = self._build_lands()
+
 
 
     def _build_graph(self):
@@ -67,14 +76,22 @@ class Graph():
                     graph[node] = {NEIGHBOURS : neighbours, COLONY: Colony.Uncolonised, HARBOUR: Harbour.NoHarbour}
 
             for node in row:
-                roads = {}
+                node_roads = {}
                 for connection in graph[node][NEIGHBOURS]:
-                    key = str(node) + str(connection) if node < connection else str(connection) + str(node)
-                    roads[key] = Road.Unpaved
+                    key = str(node).zfill(2) + str(connection).zfill(2)
+                    rew_key = str(connection).zfill(2) + str(node).zfill(2)
+                    new_road = self.roads.get(rew_key, Road(node, connection))
 
-                graph[node][ROADS] = roads
+                    node_roads[key] = new_road
+                    self.roads[key] = new_road
+
+                graph[node][ROADS] = node_roads
 
         return graph
+
+     
+    
+
 
     def _build_lands(self):
         lands = {}
