@@ -52,19 +52,19 @@ if __name__ == '__main__':
             tile = land['hextile']
 
             corners_with_dist = []
-            for c in tile.corners:
+            for i, c in tile.corners.items():
                 d = dist(mouse_pos, c)
-                corners_with_dist.append((d, c))
+                corners_with_dist.append((d, c, i))
             
             corners_with_dist = sorted(corners_with_dist, key=lambda tup: tup[0])
             curr_closest = corners_with_dist[0]
             last_curr_closest = corners_with_dist[1]
 
             if curr_closest[0] < 20:
+                print(curr_closest[2])
                 pygame.draw.rect(gw.screen, pygame.Color('green'), (curr_closest[1][0]-8,curr_closest[1][1]-8,16, 16))
             else:
                 pygame.draw.line(gw.screen, pygame.Color('green'), curr_closest[1], last_curr_closest[1], 3)
-
             if DEBUG:
                 pygame.draw.line(gw.screen, pygame.Color('green'), mouse_pos, last_curr_closest[1], 1)
                 pygame.draw.line(gw.screen, pygame.Color('green'), curr_closest[1], mouse_pos, 1)
@@ -75,11 +75,12 @@ if __name__ == '__main__':
 
         for event in ev:
             if event.type == pygame.MOUSEBUTTONUP:
-                test = _pixel_to_hex(mouse_pos[0], mouse_pos[1])
-                pixelCenter = _hex_to_node(test.q, test.r, 1, test.size, test.center_point)
-                # pixelCenter = _hex_to_pixel(test.q, test.r, test.size, test.center_point)
-                print(pixelCenter)
-                pygame.draw.rect(gw.screen, pygame.Color('green'), (pixelCenter[0]-8,pixelCenter[1]-8,16, 16))
+                if curr_closest[0] < 20:
+                    road_key = str(curr_closest[2]).zfill(2) + str(last_curr_closest[2]).zfill(2)
+                else:
+                    node_key = curr_closest[2]
+
+
 
         pygame.display.update()
         new_tick = pygame.time.get_ticks()
