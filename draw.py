@@ -110,13 +110,32 @@ def _hex_to_node(q,r,direction):
 #     col = [i for i,v in VERTICES[row] if node==v]
 
 def _pixel_to_hex(x,y):
-    h_x = (x - BOARD_CENTER_POINT[0] )/ HEX_SIZE[0]
+    h_x = (x - BOARD_CENTER_POINT[0] ) / HEX_SIZE[0]
     h_y = (y - BOARD_CENTER_POINT[1] ) / HEX_SIZE[1]
     q = HEX_ORIENTATION[4] * h_x + HEX_ORIENTATION[5] * h_y
     r = HEX_ORIENTATION[6] * h_x  + HEX_ORIENTATION[7] * h_y
-    print("q" + str(q))
-    print("r" + str(r))
-    return map(round, (q, r))
+
+    return hex_round(q,r)
+
+
+def hex_round(q,r):
+    s = -q-r
+
+    q_int = round(q)
+    r_int = round(r)
+    s_int = round(s)
+
+    q_diff = abs(q_int - q)
+    r_diff = abs(r_int - r)
+    s_diff = abs(s_int - s)
+
+    if q_diff > r_diff and q_diff > s_diff:
+        q_int = -r_int-s_int
+    elif r_diff > s_diff:
+        r_int = -q_int-s_int
+
+    return q_int,r_int
+
 
 
 def test_layout(board):
