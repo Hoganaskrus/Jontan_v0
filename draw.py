@@ -114,7 +114,9 @@ def _pixel_to_hex(x,y):
     h_y = (y - BOARD_CENTER_POINT[1] ) / HEX_SIZE[1]
     q = HEX_ORIENTATION[4] * h_x + HEX_ORIENTATION[5] * h_y
     r = HEX_ORIENTATION[6] * h_x  + HEX_ORIENTATION[7] * h_y
-    return int(q), int(r)
+    print("q" + str(q))
+    print("r" + str(r))
+    return map(round, (q, r))
 
 
 def test_layout(board):
